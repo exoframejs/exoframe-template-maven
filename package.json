@@ -1,0 +1,14 @@
+{
+  "name": "exoframe-template-maven",
+  "version": "0.2.0",
+  "description": "Maven deployment template for exoframe",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Tim Ermilov <yamalight@gmail.com> (http://codezen.net)",
+  "license": "MIT"
+}
