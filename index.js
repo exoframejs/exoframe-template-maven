@@ -2,9 +2,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const javaDockerfile = () =>
+const mavenDockerfile = () =>
   `FROM maven:onbuild
-
+EXPOSE 80
 CMD mvn exec:java`;
 
 // template name
@@ -25,7 +25,7 @@ exports.checkTemplate = async ({tempDockerDir}) => {
 exports.executeTemplate = async ({username, tempDockerDir, resultStream, util, docker}) => {
   try {
     // generate dockerfile
-    const dockerfile = javaDockerfile();
+    const dockerfile = mavenDockerfile();
     const dfPath = path.join(tempDockerDir, 'Dockerfile');
     fs.writeFileSync(dfPath, dockerfile, 'utf-8');
     util.writeStatus(resultStream, {message: 'Deploying Maven project..', level: 'info'});
@@ -38,7 +38,10 @@ exports.executeTemplate = async ({username, tempDockerDir, resultStream, util, d
     if (
       buildRes.log
         .map(it => it.toLowerCase())
-        .some(it => it.includes('error') || (it.includes('failed') && !it.includes('optional')))
+        .some(
+          it =>
+            (it.includes('error') && !it.includes('maven-error')) || (it.includes('failed') && !it.includes('optional'))
+        )
     ) {
       util.logger.debug('Build log conains error!');
       util.writeStatus(resultStream, {message: 'Build log contains errors!', level: 'error'});
